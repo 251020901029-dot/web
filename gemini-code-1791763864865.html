@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tài Xỉu Mô Phỏng</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #16213e;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #f1c40f;
+            margin-bottom: 5px;
+        }
+        .balance-box {
+            font-size: 20px;
+            margin: 15px 0;
+            background: #0f3460;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .dice {
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 150px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            text-align: center;
+        }
+        .btn-group {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-tai { background-color: #e74c3c; color: white; }
+        .btn-xiu { background-color: #3498db; color: white; }
+        button:hover { opacity: 0.9; transform: scale(1.05); }
+        button:disabled { background-color: #7f8c8d; cursor: not-allowed; transform: none; }
+        
+        #result-message {
+            font-size: 20px;
+            font-weight: bold;
+            min-height: 30px;
+            margin-top: 15px;
+        }
+
+        /* Phần QR code */
+        .qr-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #0f3460;
+        }
+        .qr-section h3 {
+            color: #e2b714;
+            margin-bottom: 10px;
+        }
+        .qr-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            display: inline-block;
+            color: #333;
+        }
+        .qr-card img {
+            width: 220px;
+            border-radius: 8px;
+        }
+        .account-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            color: #0f3460;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>GAME TÀI XỈU</h1>
+    <p>Xỉu: 3 - 10 | Tài: 11 - 18</p>
+
+    <div class="balance-box">
+        Số dư: <span id="balance">1000</span> xu
+    </div>
+
+    <div class="dice-container">
+        <div class="dice" id="dice1">?</div>
+        <div class="dice" id="dice2">?</div>
+        <div class="dice" id="dice3">?</div>
+    </div>
+
+    <div class="controls">
+        <input type="number" id="bet-amount" placeholder="Nhập số xu cược" min="10" step="10">
+        <div class="btn-group">
+            <button class="btn-tai" onclick="playGame('tai')">Cược TÀI</button>
+            <button class="btn-xiu" onclick="playGame('xiu')">Cược XỈU</button>
+        </div>
+    </div>
+
+    <div id="result-message"></div>
+
+    <!-- Tích hợp Mã QR từ ảnh của bạn -->
+    <div class="qr-section">
+        <h3>NẠP XU / UNG HỘ ADMIN</h3>
+        <div class="qr-card">
+            <!-- Thay đường dẫn src bên dưới thành file ảnh của bạn nếu chạy offline -->
+            <img src="image_e25c43.jpg" alt="Mã QR NGO DUC THIEN">
+            <div class="account-name">NGO DUC THIEN</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentBalance = 1000;
+
+    function playGame(choice) {
+        const betInput = document.getElementById('bet-amount');
+        const betAmount = parseInt(betInput.value);
+        const resultDiv = document.getElementById('result-message');
+
+        if (isNaN(betAmount) || betAmount <= 0) {
+            alert('Vui lòng nhập số xu cược hợp lệ!');
+            return;
+        }
+
+        if (betAmount > currentBalance) {
+            alert('Số dư không đủ để đặt cược!');
+            return;
+        }
+
+        // Hiệu ứng lắc xí ngầu
+        resultDiv.innerText = "Đang lắc xí ngầu...";
+        let rolls = 0;
+        const interval = setInterval(() => {
+            document.getElementById('dice1').innerText = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice2').innerText = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice3').innerText = Math.floor(Math.random() * 6) + 1;
+            rolls++;
+
+            if (rolls > 10) {
+                clearInterval(interval);
+                finalizeGame(choice, betAmount);
+            }
+        }, 100);
+    }
+
+    function finalizeGame(choice, betAmount) {
+        const d1 = Math.floor(Math.random() * 6) + 1;
+        const d2 = Math.floor(Math.random() * 6) + 1;
+        const d3 = Math.floor(Math.random() * 6) + 1;
+
+        document.getElementById('dice1').innerText = d1;
+        document.getElementById('dice2').innerText = d2;
+        document.getElementById('dice3').innerText = d3;
+
+        const total = d1 + d2 + d3;
+        const gameResult = total >= 11 ? 'tai' : 'xiu';
+        const resultText = total >= 11 ? 'TÀI' : 'XỈU';
+
+        const resultDiv = document.getElementById('result-message');
+
+        if (choice === gameResult) {
+            currentBalance += betAmount;
+            resultDiv.style.color = '#2ecc71';
+            resultDiv.innerText = `Kết quả: ${total} điểm (${resultText}) - Bạn THẮNG +${betAmount} xu!`;
+        } else {
+            currentBalance -= betAmount;
+            resultDiv.style.color = '#e74c3c';
+            resultDiv.innerText = `Kết quả: ${total} điểm (${resultText}) - Bạn THUA -${betAmount} xu!`;
+        }
+
+        document.getElementById('balance').innerText = currentBalance;
+    }
+</script>
+
+</body>
+</html>
