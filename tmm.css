@@ -1,0 +1,39 @@
+/* 3. Tạo kiểu cho thẻ nội dung (body): họ phông chữ & kích thước phông chữ */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+
+header {
+  background-color: #e2e8f0;
+}
+
+/* 5. Tạo kiểu cho thẻ nav: màu nền */
+nav {
+  background-color: #cbd5e1;
+}
+
+main {
+  background-color: #f8fafc;
+  font-size: 18px;
+}
+
+footer {
+  background-color: #e2e8f0;
+}
+
+li {
+  display: inline-block;
+  width: 200px;
+}
+
+h1 {
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #1e3a8a;
+}
+
+p {
+  line-height: 1.5;
+}
